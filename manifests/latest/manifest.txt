@@ -1,0 +1,26 @@
+# Folio Integrity Manifest
+# Generated: 2026-05-14T17:49:09Z
+# Git commit: 246997051d718aa4f585bebf4fcc988468fd9b26
+# Git tag: v1.46-pwd-fix-35-g2469970
+# Domain: https://folio.anchordocservices.com
+# Format: SHA256  PUBLIC_PATH  SOURCE_FILE
+# ---
+
+36a14216f264964a47af6ab690f770b6e3a020f62b0a57a3812e077a92c0702e  /static/js/crypto.js  web/static/js/crypto.js
+4d6298cb787d0b13a5452e1fdcfb846311ea7d6218b422a8028c462f9f70d779  /static/js/folio-editor.js  web/static/js/folio-editor.js
+5e8ac771c23fe0bcbf161842295c23e64e0c05a20d4cc4230c67e1fc6b30d7b1  /static/js/folio-tiptap.js  web/static/js/folio-tiptap.js
+6c7672ce420c754361bab435aaf76a7193b248db948fd30614ae59bb07c4ebe0  /static/js/i18n.js  web/static/js/i18n.js
+2baeacaffdc3a7c0631d55900a20f59d1de12838238472573acb00130efc7df7  /static/i18n/en.json  web/static/i18n/en.json
+d1974e30b91fb11111314e9e7dd75bd4bb2eae1b0adc61f36eea64c587b73bc2  /static/i18n/it.json  web/static/i18n/it.json
+56fb04431a74e1a2342f6d0c5917bdfd524a55c7b40f9991e9896fa265eefd8d  /account  web/templates/account.html
+46aa82bc11ecc511e785597bc654a4b41934bcfd5cde524a7ea5ac4aca3ccaef  /app  web/templates/app.html
+da0e59596b9f89a5796ae0a16446bd00b5c89e070fa472e4c7f44ecb976ca3f1  /login/en  web/templates/login_en.html
+ba69ddf2eeeb3f404dfa8cbbd67fde156d7555079573b9646624157399d2a597  /login  web/templates/login.html
+42828722ab917af64debab8d288989a1d1808cd40916aefea0dee1d0dc2aa637  /register/en  web/templates/register_en.html
+160bf950a956947b780225bcde3cca07262a4175ac6061f29e8f07fe45f3dcf5  /register  web/templates/register.html
+08cc99dff2956f7a46bc1d4cae51e38d3acfa904bac0f640c577314cfeec6d24  /recovery  web/templates/recovery.html
+ec7662228763554f2a5874bc1b10efe62efc82df88df276870319f9906e09da4  /recovery-kit  web/templates/recovery_kit_setup.html
+
+# ---
+# Checked assets: 14/14
+# Errors: 0
