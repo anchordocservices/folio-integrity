@@ -1,9 +1,10 @@
 # Folio Integrity Manifest
-# Generated: 2026-05-14T22:13:19Z
-# Git commit: 7d0c31d063010927350b90b718b7d453d1ab5f8f
-# Git tag: v1.46-pwd-fix-37-g7d0c31d
+# Generated: 2026-05-17T17:04:35Z
+# Git commit: 09acfedb04e9b29808de7908e54a75ec9ba8cc1d
+# Git tag: v1.46-pwd-fix-38-g09acfed
 # Domain: https://folio.anchordocservices.com
-# Format: SHA256  PUBLIC_PATH  SOURCE_FILE
+# Source: live HTTP GET (not local files)
+# Format: SHA256  PUBLIC_PATH  SOURCE_LABEL
 # ---
 
 36a14216f264964a47af6ab690f770b6e3a020f62b0a57a3812e077a92c0702e  /static/js/crypto.js  web/static/js/crypto.js
@@ -12,15 +13,10 @@
 6c7672ce420c754361bab435aaf76a7193b248db948fd30614ae59bb07c4ebe0  /static/js/i18n.js  web/static/js/i18n.js
 2baeacaffdc3a7c0631d55900a20f59d1de12838238472573acb00130efc7df7  /static/i18n/en.json  web/static/i18n/en.json
 d1974e30b91fb11111314e9e7dd75bd4bb2eae1b0adc61f36eea64c587b73bc2  /static/i18n/it.json  web/static/i18n/it.json
-56fb04431a74e1a2342f6d0c5917bdfd524a55c7b40f9991e9896fa265eefd8d  /account  web/templates/account.html
-46aa82bc11ecc511e785597bc654a4b41934bcfd5cde524a7ea5ac4aca3ccaef  /app  web/templates/app.html
-da0e59596b9f89a5796ae0a16446bd00b5c89e070fa472e4c7f44ecb976ca3f1  /en/login  web/templates/login_en.html
-ba69ddf2eeeb3f404dfa8cbbd67fde156d7555079573b9646624157399d2a597  /login  web/templates/login.html
-42828722ab917af64debab8d288989a1d1808cd40916aefea0dee1d0dc2aa637  /en/register  web/templates/register_en.html
-160bf950a956947b780225bcde3cca07262a4175ac6061f29e8f07fe45f3dcf5  /register  web/templates/register.html
-08cc99dff2956f7a46bc1d4cae51e38d3acfa904bac0f640c577314cfeec6d24  /recovery  web/templates/recovery.html
-ec7662228763554f2a5874bc1b10efe62efc82df88df276870319f9906e09da4  /recovery-kit-setup  web/templates/recovery_kit_setup.html
+b616f11aee77a717d28041908b4c37eac87d50e69698c68a885a147b14e74646  /app  web/templates/app.html
+fc99738457260a54082dede768bc5dfeb30708050750b00b088146717ef83b67  /register  web/templates/register.html
+964e8b3142f864d77ba615e0a62bebfdcb32ffc9cd3caa9036484606f79f4d8f  /en/register  web/templates/register_en.html
 
 # ---
-# Checked assets: 14/14
+# Checked live assets: 9/9
 # Errors: 0
