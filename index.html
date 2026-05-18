@@ -145,7 +145,50 @@
     .file-row { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
     .file-icon { font-size: 14px; flex-shrink: 0; }
     .file-name { flex: 1; word-break: break-all; }
-    .file-hash { font-size: 10px; color: rgba(94,88,82,0.6); word-break: break-all; }
+     .file-hash { font-size: 10px; color: rgba(94,88,82,0.6); word-break: break-all; }
+
+    .tech-block {
+      margin-top: 10px;
+      padding: 10px 0;
+      border-top: 1px solid var(--line);
+      font-family: -apple-system, system-ui, sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .tech-kv {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid rgba(75,57,41,0.08);
+      padding: 4px 0;
+    }
+
+    .tech-kv span:last-child {
+      text-align: right;
+      color: var(--text);
+    }
+
+    .audit-details {
+      margin-top: 12px;
+      font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+      font-size: 11px;
+    }
+
+    .audit-details summary {
+      cursor: pointer;
+      color: var(--brand);
+      font-family: -apple-system, system-ui, sans-serif;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .audit-hash {
+      color: rgba(94,88,82,0.72);
+      word-break: break-all;
+      margin: 2px 0 8px 22px;
+    }
 
     .progress {
       display: none;
@@ -219,19 +262,18 @@
 
     <div class="header">
       <div class="logo">folio</div>
-      <div class="subtitle">Verifica Integrità</div>
+      <div class="subtitle">Verifica integrità</div>
     </div>
 
     <div class="card">
-      <h2>I file sono autentici?</h2>
+      <h2>Verifica indipendente dell’integrità</h2>
       <p>
-        Questa pagina verifica che il codice servito dal server di Folio corrisponda
-        esattamente alla versione pubblicata e firmata dal maintainer.
-        La verifica avviene interamente nel tuo browser.
+        Questa pagina verifica che i componenti critici di Folio corrispondano
+        al manifest firmato dal maintainer. La verifica avviene interamente nel tuo browser.
       </p>
       <p>
-        Questa pagina è ospitata su GitHub, non sul server di Folio —
-        non può essere alterata da chi controlla il server.
+        La pagina è ospitata fuori dal server di Folio, così la verifica rimane separata
+        dall’infrastruttura applicativa principale.
       </p>
 
       <button class="verify-btn" id="btn-verify" onclick="runVerification()" disabled>
@@ -261,25 +303,23 @@
     <div class="info-card">
       <h3>Come funziona</h3>
       <p>
-        Ad ogni aggiornamento di Folio, il maintainer genera un elenco di impronte digitali
-        (hash) di tutti i file critici — il codice di cifratura, le pagine di login e registrazione,
-        l'applicazione. Questo elenco viene firmato con una chiave crittografica privata
-        che non è mai stata sul server.
+        Ad ogni aggiornamento di Folio, il maintainer genera un manifest con le impronte
+        digitali dei componenti critici dell’applicazione. Il manifest viene firmato con una
+        chiave GPG privata custodita fuori dal server Folio.
       </p>
       <p>
-        Quando premi "Verifica", questa pagina scarica i file dal server di Folio,
-        ne calcola le impronte, e le confronta con quelle nell'elenco firmato.
-        Se corrispondono, il codice non è stato alterato.
+        Quando premi “Verifica”, questa pagina scarica i componenti live dal server Folio,
+        calcola SHA-256 nel browser e confronta il risultato con il manifest firmato.
       </p>
       <p>
-        La firma GPG del manifest viene verificata crittograficamente nel tuo browser
-        usando la chiave pubblica del maintainer, inclusa in questa pagina.
+        La firma GPG del manifest viene verificata crittograficamente nel browser usando
+        la chiave pubblica del maintainer inclusa in questa pagina.
       </p>
-      <p>Chiave GPG del maintainer:</p>
+      <p>Fingerprint GPG del maintainer:</p>
       <div class="gpg-fingerprint">AF72 1580 F0B1 1F2B 6236 ADDE 5CF9 C685 C375 CD70</div>
       <p>
-        Il codice sorgente di questa pagina è pubblico e ispezionabile su
-        <a href="https://github.com/anchordocservices/folio-integrity" style="color:var(--brand)">GitHub</a>.
+        Dettagli tecnici e metodologia sono disponibili nel repository pubblico
+        <a href="https://github.com/anchordocservices/folio-integrity" style="color:var(--brand)">folio-integrity</a>.
       </p>
     </div>
 
@@ -381,6 +421,20 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
     document.getElementById('progress-fill').style.width = pct + '%';
   }
 
+  function displayNameFor(entry) {
+    const ref = ((entry && entry.name) || '') + ' ' + ((entry && entry.url) || '');
+    if (ref.indexOf('crypto.js') !== -1) return 'Motore di cifratura';
+    if (ref.indexOf('folio-editor.js') !== -1) return 'Editor';
+    if (ref.indexOf('folio-tiptap.js') !== -1) return 'Editor rich text';
+    if (ref.indexOf('i18n.js') !== -1) return 'Motore lingua';
+    if (ref.indexOf('en.json') !== -1) return 'Risorse lingua EN';
+    if (ref.indexOf('it.json') !== -1) return 'Risorse lingua IT';
+    if (ref.indexOf('app.html') !== -1 || ref.indexOf('/app') !== -1) return 'Applicazione';
+    if (ref.indexOf('register_en.html') !== -1 || ref.indexOf('/en/register') !== -1) return 'Registrazione EN';
+    if (ref.indexOf('register.html') !== -1 || ref.indexOf('/register') !== -1) return 'Registrazione IT';
+    return 'Componente verificato';
+  }
+
   // Costruzione DOM sicura — nessun innerHTML con dati dalla rete
   function showResult(type, icon, title, detail, files) {
     const result = document.getElementById('result');
@@ -390,10 +444,35 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
     document.getElementById('result-detail').textContent = detail;
 
     const list = document.getElementById('details-list');
-    // Pulizia sicura
     while (list.firstChild) { list.removeChild(list.firstChild); }
 
     if (files && files.length > 0) {
+      const tech = document.createElement('div');
+      tech.className = 'tech-block';
+
+      const rows = [
+        ['Firma manifest', type === 'ok' ? 'verificata' : 'controllata'],
+        ['Fingerprint chiave', 'AF72 1580 F0B1 1F2B 6236 ADDE 5CF9 C685 C375 CD70'],
+        ['Componenti verificati', String(files.length)],
+        ['Algoritmo hash', 'SHA-256'],
+        ['Algoritmo firma', 'OpenPGP / GPG'],
+        ['Dominio verificato', 'folio.anchordocservices.com']
+      ];
+
+      rows.forEach(function(pair) {
+        const row = document.createElement('div');
+        row.className = 'tech-kv';
+        const k = document.createElement('span');
+        const v = document.createElement('span');
+        k.textContent = pair[0];
+        v.textContent = pair[1];
+        row.appendChild(k);
+        row.appendChild(v);
+        tech.appendChild(row);
+      });
+
+      list.appendChild(tech);
+
       for (let i = 0; i < files.length; i++) {
         const f = files[i];
 
@@ -406,19 +485,44 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
 
         const nameSpan = document.createElement('span');
         nameSpan.className = 'file-name';
-        nameSpan.textContent = f.name;
+        nameSpan.textContent = f.displayName || f.name || 'Componente verificato';
 
         row.appendChild(iconSpan);
         row.appendChild(nameSpan);
         list.appendChild(row);
 
-        if (f.hash) {
-          const hashDiv = document.createElement('div');
-          hashDiv.className = 'file-hash';
-          hashDiv.textContent = f.hash;
-          list.appendChild(hashDiv);
+        if (!f.ok && f.hash) {
+          const errDiv = document.createElement('div');
+          errDiv.className = 'file-hash';
+          errDiv.textContent = f.hash;
+          list.appendChild(errDiv);
         }
       }
+
+      const audit = document.createElement('details');
+      audit.className = 'audit-details';
+
+      const summary = document.createElement('summary');
+      summary.textContent = 'Mostra audit hashes';
+      audit.appendChild(summary);
+
+      for (let i = 0; i < files.length; i++) {
+        const f = files[i];
+        if (!f.ok || !f.hash || f.hash.indexOf('atteso:') === 0 || f.hash.indexOf('errore:') === 0 || f.hash.indexOf('Bloccato') === 0) {
+          continue;
+        }
+
+        const auditName = document.createElement('div');
+        auditName.textContent = (f.displayName || f.name || 'Componente') + ' — SHA-256';
+        audit.appendChild(auditName);
+
+        const auditHash = document.createElement('div');
+        auditHash.className = 'audit-hash';
+        auditHash.textContent = f.hash;
+        audit.appendChild(auditHash);
+      }
+
+      list.appendChild(audit);
       document.getElementById('details-toggle').style.display = 'inline-block';
     } else {
       document.getElementById('details-toggle').style.display = 'none';
@@ -432,10 +536,10 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
     const btn = document.getElementById('details-toggle');
     if (list.classList.contains('open')) {
       list.classList.remove('open');
-      btn.textContent = 'Mostra dettagli';
+      btn.textContent = 'Mostra dettagli tecnici';
     } else {
       list.classList.add('open');
-      btn.textContent = 'Nascondi dettagli';
+      btn.textContent = 'Nascondi dettagli tecnici';
     }
   }
 
@@ -448,7 +552,7 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       if (line.startsWith('# Git tag:')) meta.tag = line.split(':').slice(1).join(':').trim();
-      if (line.startsWith('# Generato:')) meta.date = line.split(':').slice(1).join(':').trim();
+      if (line.startsWith('# Generato:') || line.startsWith('# Generated:')) meta.date = line.split(':').slice(1).join(':').trim();
       if (line.startsWith('# Container version:')) meta.version = line.split(':').slice(1).join(':').trim();
       if (line.startsWith('#') || line.trim() === '') continue;
 
@@ -558,12 +662,13 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
       for (let i = 0; i < entries.length; i++) {
         const entry = entries[i];
         const pct = 35 + Math.round((i / entries.length) * 55);
-        setProgress('Verifica ' + entry.name + '...', pct);
+        setProgress('Verifica ' + displayNameFor(entry) + '...', pct);
 
         try {
-          const resp = await fetch(FOLIO_DOMAIN + entry.url, { cache: 'no-store' });
+          const assetUrl = FOLIO_DOMAIN + entry.url + (entry.url.indexOf('?') === -1 ? '?' : '&') + 'integrity_nocache=' + Date.now();
+          const resp = await fetch(assetUrl, { cache: 'no-store' });
           if (!resp.ok) {
-            results.push({ name: entry.name, ok: false, hash: 'file non raggiungibile (HTTP ' + resp.status + ')' });
+            results.push({ name: entry.name, displayName: displayNameFor(entry), ok: false, hash: 'file non raggiungibile (HTTP ' + resp.status + ')' });
             continue;
           }
 
@@ -571,6 +676,7 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
           const hash = await sha256Binary(arrayBuffer);
           results.push({
             name: entry.name,
+            displayName: displayNameFor(entry),
             ok: hash === entry.hash,
             hash: hash === entry.hash
               ? hash
@@ -581,11 +687,12 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
               (e.message.indexOf('Failed to fetch') !== -1 || e.message.indexOf('NetworkError') !== -1)) {
             results.push({
               name: entry.name,
+              displayName: displayNameFor(entry),
               ok: false,
               hash: 'Bloccato dal browser (CORS). Il server deve inviare Access-Control-Allow-Origin per questo dominio.'
             });
           } else {
-            results.push({ name: entry.name, ok: false, hash: 'errore: ' + e.message });
+            results.push({ name: entry.name, displayName: displayNameFor(entry), ok: false, hash: 'errore: ' + e.message });
           }
         }
       }
@@ -609,14 +716,12 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
           })
         : '';
 
-      const gpgNote = 'Firma GPG verificata crittograficamente (key ID: ' + gpgResult.keyID + ').';
+      const gpgNote = 'Firma digitale verificata.';
 
       if (allOk) {
         showResult('ok', '\u2713',
-          'Tutti i file verificati',
-          results.length + ' asset corrispondono al manifest firmato. ' + gpgNote +
-          (versionInfo ? ' ' + versionInfo + '.' : '') +
-          (dateInfo ? ' Firmato il ' + dateInfo + '.' : ''),
+          'Integrità verificata',
+          'I componenti critici dell’applicazione corrispondono al manifest firmato. ' + gpgNote,
           results
         );
       } else if (corsBlocked > 0 && corsBlocked === failCount) {
@@ -673,7 +778,7 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
 
       // Tutto ok: abilita il bottone
       btn.disabled = false;
-      btn.textContent = 'Verifica integrit\u00e0';
+      btn.textContent = 'Verifica integrità';
 
     } catch (err) {
       // Chiave non valida o placeholder non sostituito: blocca la pagina
