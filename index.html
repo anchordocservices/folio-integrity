@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Folio — Verifica Integrità</title>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://raw.githubusercontent.com https://folio.anchordocservices.com; style-src 'unsafe-inline'; img-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests">
+  <title>Folio — Integrity Verification</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://raw.githubusercontent.com https://*.githubusercontent.com https://githubusercontent.com https://folio.anchordocservices.com; style-src 'unsafe-inline'; img-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests">
   <style>
     :root {
       --bg: #f5efe7;
@@ -32,12 +32,28 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 40px 20px 60px;
+      padding: 20px 20px 60px;
       color: var(--text);
       line-height: 1.6;
     }
 
     .container { max-width: 640px; width: 100%; }
+
+    .top-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+      font-family: -apple-system, system-ui, sans-serif;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .lang-toggle span {
+      cursor: pointer;
+      padding: 4px 8px;
+      transition: color 0.2s;
+    }
+    .lang-toggle span.active { color: var(--brand); font-weight: 600; pointer-events: none; }
+    .lang-toggle span:hover:not(.active) { color: var(--text); }
 
     .header { text-align: center; margin-bottom: 40px; }
 
@@ -145,7 +161,7 @@
     .file-row { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
     .file-icon { font-size: 14px; flex-shrink: 0; }
     .file-name { flex: 1; word-break: break-all; }
-     .file-hash { font-size: 10px; color: rgba(94,88,82,0.6); word-break: break-all; }
+    .file-hash { font-size: 10px; color: rgba(94,88,82,0.6); word-break: break-all; }
 
     .tech-block {
       margin-top: 10px;
@@ -260,28 +276,34 @@
 
   <div class="container">
 
+    <div class="top-bar">
+      <div class="lang-toggle">
+        <span id="lang-it">IT</span> | <span id="lang-en">EN</span>
+      </div>
+    </div>
+
     <div class="header">
       <div class="logo">folio</div>
-      <div class="subtitle">Verifica integrità</div>
+      <div class="subtitle" id="t-subtitle">Verifica integrità</div>
     </div>
 
     <div class="card">
-      <h2>Verifica indipendente dell’integrità</h2>
-      <p>
+      <h2 id="t-card1-title">Verifica indipendente dell’integrità</h2>
+      <p id="t-card1-p1">
         Questa pagina verifica che i componenti critici di Folio corrispondano
         al manifest firmato dal maintainer. La verifica avviene interamente nel tuo browser.
       </p>
-      <p>
+      <p id="t-card1-p2">
         La pagina è ospitata fuori dal server di Folio, così la verifica rimane separata
         dall’infrastruttura applicativa principale.
       </p>
 
-      <button class="verify-btn" id="btn-verify" onclick="runVerification()" disabled>
+      <button class="verify-btn" id="btn-verify" disabled>
         Caricamento...
       </button>
 
       <div class="progress" id="progress">
-        <span id="progress-text">Scaricamento manifest firmato...</span>
+        <span id="progress-text"></span>
         <div class="progress-bar">
           <div class="progress-fill" id="progress-fill"></div>
         </div>
@@ -291,7 +313,7 @@
         <div class="result-icon" id="result-icon"></div>
         <div class="result-title" id="result-title"></div>
         <div class="result-detail" id="result-detail"></div>
-        <button class="details-toggle" id="details-toggle" onclick="toggleDetails()">
+        <button class="details-toggle" id="details-toggle">
           Mostra dettagli
         </button>
         <div class="details-list" id="details-list"></div>
@@ -301,55 +323,246 @@
     </div>
 
     <div class="info-card">
-      <h3>Come funziona</h3>
-      <p>
+      <h3 id="t-info-title">Come funziona</h3>
+      <p id="t-info-p1">
         Ad ogni aggiornamento di Folio, il maintainer genera un manifest con le impronte
         digitali dei componenti critici dell’applicazione. Il manifest viene firmato con una
         chiave GPG privata custodita fuori dal server Folio.
       </p>
-      <p>
+      <p id="t-info-p2">
         Quando premi “Verifica”, questa pagina scarica i componenti live dal server Folio,
         calcola SHA-256 nel browser e confronta il risultato con il manifest firmato.
       </p>
-      <p>
+      <p id="t-info-p3">
         La firma GPG del manifest viene verificata crittograficamente nel browser usando
         la chiave pubblica del maintainer inclusa in questa pagina.
       </p>
-      <p>Fingerprint GPG del maintainer:</p>
+      <p id="t-info-p4">Fingerprint GPG del maintainer:</p>
       <div class="gpg-fingerprint">AF72 1580 F0B1 1F2B 6236 ADDE 5CF9 C685 C375 CD70</div>
       <p>
-        Dettagli tecnici e metodologia sono disponibili nel repository pubblico
+        <span id="t-info-p5a">Dettagli tecnici e metodologia sono disponibili nel repository pubblico</span>
         <a href="https://github.com/anchordocservices/folio-integrity" style="color:var(--brand)">folio-integrity</a>.
       </p>
     </div>
 
     <div class="footer">
-      Pagina ospitata su GitHub Pages — indipendente dal server di Folio<br>
+      <span id="t-footer">Pagina ospitata su GitHub Pages — indipendente dal server di Folio</span><br>
       <a href="https://folio.anchordocservices.com">folio.anchordocservices.com</a>
     </div>
 
   </div>
 
-<!-- OpenPGP.js v5 — verifica crittografica reale della firma GPG nel browser -->
 <script src="./vendor/openpgp.min.js"></script>
 
 <script>
-// === IIFE: tutto il codice è isolato, nessuna variabile globale sovrascrivibile ===
 (function() {
   'use strict';
 
-  // --- Configurazione (const, non riassegnabili, non in window.*) ---
+  const I18N = {
+    it: {
+      pageTitle: "Folio — Verifica Integrità",
+      subtitle: "Verifica integrità",
+      card1Title: "Verifica indipendente dell’integrità",
+      card1p1: "Questa pagina verifica che i componenti critici di Folio corrispondano al manifest firmato dal maintainer. La verifica avviene interamente nel tuo browser.",
+      card1p2: "La pagina è ospitata fuori dal server di Folio, così la verifica rimane separata dall’infrastruttura applicativa principale.",
+      btnVerify: "Verifica integrità",
+      btnLoading: "Caricamento...",
+      btnVerifyAgain: "Verifica di nuovo",
+      btnNotAvail: "Verifica non disponibile",
+      infoTitle: "Come funziona",
+      infoP1: "Ad ogni aggiornamento di Folio, il maintainer genera un manifest con le impronte digitali dei componenti critici dell’applicazione. Il manifest viene firmato con una chiave GPG privata custodita fuori dal server Folio.",
+      infoP2: "Quando premi “Verifica”, questa pagina scarica i componenti live dal server Folio, calcola SHA-256 nel browser e confronta il risultato con il manifest firmato.",
+      infoP3: "La firma GPG del manifest viene verificata crittograficamente nel browser usando la chiave pubblica del maintainer inclusa in questa pagina.",
+      infoP4: "Fingerprint GPG del maintainer:",
+      infoP5a: "Dettagli tecnici e metodologia sono disponibili nel repository pubblico ",
+      footer: "Pagina ospitata su GitHub Pages — indipendente dal server di Folio",
+      progManifest: "Scaricamento manifest da GitHub...",
+      progSig: "Scaricamento firma GPG...",
+      progVerGpg: "Verifica crittografica della firma GPG...",
+      progReadMan: "Firma verificata. Lettura manifest...",
+      progVerComp: "Verifica ",
+      progDone: "Completamento...",
+      errManifest: "Manifest non trovato. Nessuna release pubblicata ancora.",
+      errSigMissingTitle: "Firma GPG assente",
+      errSigMissingDesc: "Il file di firma (manifest.txt.asc) non è stato trovato. Senza firma crittografica il manifest non è verificabile. Verifica interrotta.",
+      errSigInvalidTitle: "Firma GPG non valida",
+      errSigInvalidDesc: "La firma crittografica del manifest non corrisponde alla chiave pubblica del maintainer. Il manifest potrebbe essere stato alterato. Errore: ",
+      errEmptyMan: "Manifest firmato vuoto o formato non valido.",
+      errUnreachable: "file non raggiungibile (HTTP $1)",
+      errCorsHash: "Bloccato dal browser (CORS). Il server deve inviare Access-Control-Allow-Origin per questo dominio.",
+      errGenericHash: "errore: $1",
+      resOkTitle: "Integrità verificata",
+      resOkDesc: "I componenti critici dell’applicazione corrispondono al manifest firmato. Firma digitale verificata.",
+      resWarnCorsTitle: "Verifica bloccata dal browser",
+      resWarnCorsDesc: "$1 asset non verificabili per restrizioni CORS. Il server di Folio deve aggiungere l'header Access-Control-Allow-Origin per questo dominio. Firma digitale verificata.",
+      resFailTitle: "$1 file non corrispondono",
+      resFailDesc: "Attenzione: $1 asset su $2 non corrispondono al manifest firmato. Il codice sul server potrebbe essere stato modificato. Firma digitale verificata.",
+      resIncTitle: "Verifica non completata",
+      resIncDesc: "Errore durante la verifica.",
+      btnDetailsShow: "Mostra dettagli tecnici",
+      btnDetailsHide: "Nascondi dettagli tecnici",
+      auditSummary: "Mostra audit hashes",
+      tdSigLabel: "Firma manifest",
+      tdSigVer: "verificata",
+      tdSigChk: "controllata",
+      tdFpLabel: "Fingerprint chiave",
+      tdCompLabel: "Componenti verificati",
+      tdHashLabel: "Algoritmo hash",
+      tdAlgLabel: "Algoritmo firma",
+      tdDomLabel: "Dominio verificato",
+      bootErrLib: "La libreria di verifica crittografica (OpenPGP.js) non si è caricata. Ricarica la pagina.",
+      bootErrFp: "La chiave pubblica inclusa in questa pagina ha un fingerprint diverso da quello atteso. Atteso: $1 — Trovato: $2. La pagina potrebbe essere stata manomessa.",
+      bootErrConf: "Errore di configurazione: la chiave pubblica GPG inclusa in questa pagina non è valida. La verifica non può procedere. Dettaglio: ",
+      cCrypto: "Motore di cifratura",
+      cEditor: "Editor",
+      cRich: "Editor rich text",
+      cLang: "Motore lingua",
+      cResEn: "Risorse lingua EN",
+      cResIt: "Risorse lingua IT",
+      cApp: "Applicazione",
+      cRegEn: "Registrazione EN",
+      cRegIt: "Registrazione IT",
+      cGen: "Componente verificato",
+      hashMismatch: "atteso: $1...  ricevuto: $2..."
+    },
+    en: {
+      pageTitle: "Folio — Integrity Verification",
+      subtitle: "Integrity Verification",
+      card1Title: "Independent Integrity Verification",
+      card1p1: "This page verifies that Folio's critical components match the maintainer's signed manifest. Verification happens entirely in your browser.",
+      card1p2: "The page is hosted outside the Folio server, keeping the verification separated from the main application infrastructure.",
+      btnVerify: "Verify integrity",
+      btnLoading: "Loading...",
+      btnVerifyAgain: "Verify again",
+      btnNotAvail: "Verification unavailable",
+      infoTitle: "How it works",
+      infoP1: "With each Folio update, the maintainer generates a manifest with the fingerprints of the application's critical components. The manifest is signed with a private GPG key kept outside the Folio server.",
+      infoP2: "When you click 'Verify', this page downloads the live components from the Folio server, calculates the SHA-256 in the browser, and compares the result with the signed manifest.",
+      infoP3: "The manifest's GPG signature is cryptographically verified in the browser using the maintainer's public key included in this page.",
+      infoP4: "Maintainer GPG Fingerprint:",
+      infoP5a: "Technical details and methodology are available in the public repository ",
+      footer: "Page hosted on GitHub Pages — independent from the Folio server",
+      progManifest: "Downloading manifest from GitHub...",
+      progSig: "Downloading GPG signature...",
+      progVerGpg: "Cryptographic verification of the GPG signature...",
+      progReadMan: "Signature verified. Reading manifest...",
+      progVerComp: "Verifying ",
+      progDone: "Completing...",
+      errManifest: "Manifest not found. No release published yet.",
+      errSigMissingTitle: "Missing GPG Signature",
+      errSigMissingDesc: "The signature file (manifest.txt.asc) was not found. Without a cryptographic signature, the manifest is unverifiable. Verification aborted.",
+      errSigInvalidTitle: "Invalid GPG Signature",
+      errSigInvalidDesc: "The manifest's cryptographic signature does not match the maintainer's public key. The manifest may have been altered. Error: ",
+      errEmptyMan: "Signed manifest is empty or invalid format.",
+      errUnreachable: "file unreachable (HTTP $1)",
+      errCorsHash: "Blocked by browser (CORS). The server must send Access-Control-Allow-Origin for this domain.",
+      errGenericHash: "error: $1",
+      resOkTitle: "Integrity verified",
+      resOkDesc: "The application's critical components match the signed manifest. Digital signature verified.",
+      resWarnCorsTitle: "Verification blocked by browser",
+      resWarnCorsDesc: "$1 assets unverifiable due to CORS restrictions. The Folio server must add the Access-Control-Allow-Origin header for this domain. Digital signature verified.",
+      resFailTitle: "$1 files do not match",
+      resFailDesc: "Warning: $1 assets out of $2 do not match the signed manifest. The code on the server may have been modified. Digital signature verified.",
+      resIncTitle: "Verification incomplete",
+      resIncDesc: "Error during verification.",
+      btnDetailsShow: "Show technical details",
+      btnDetailsHide: "Hide technical details",
+      auditSummary: "Show audit hashes",
+      tdSigLabel: "Manifest signature",
+      tdSigVer: "verified",
+      tdSigChk: "checked",
+      tdFpLabel: "Key fingerprint",
+      tdCompLabel: "Verified components",
+      tdHashLabel: "Hash algorithm",
+      tdAlgLabel: "Signature algorithm",
+      tdDomLabel: "Verified domain",
+      bootErrLib: "The cryptographic verification library (OpenPGP.js) failed to load. Please reload the page.",
+      bootErrFp: "The public key included in this page has a different fingerprint than expected. Expected: $1 — Found: $2. The page may have been tampered with.",
+      bootErrConf: "Configuration error: the GPG public key included in this page is invalid. Verification cannot proceed. Detail: ",
+      cCrypto: "Encryption Engine",
+      cEditor: "Editor",
+      cRich: "Rich text editor",
+      cLang: "Language Engine",
+      cResEn: "Language Resources EN",
+      cResIt: "Language Resources IT",
+      cApp: "Application",
+      cRegEn: "Registration EN",
+      cRegIt: "Registration IT",
+      cGen: "Verified Component",
+      hashMismatch: "expected: $1...  received: $2..."
+    }
+  };
+
+  let currentLang = 'it';
+
+  function t(key, arg1, arg2) {
+    let str = I18N[currentLang][key] || I18N['en'][key] || key;
+    if (arg1 !== undefined) str = str.replace('$1', arg1);
+    if (arg2 !== undefined) str = str.replace('$2', arg2);
+    return str;
+  }
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    
+    document.getElementById('lang-it').className = lang === 'it' ? 'active' : '';
+    document.getElementById('lang-en').className = lang === 'en' ? 'active' : '';
+
+    document.title = t('pageTitle');
+    document.getElementById('t-subtitle').textContent = t('subtitle');
+    document.getElementById('t-card1-title').textContent = t('card1Title');
+    document.getElementById('t-card1-p1').textContent = t('card1p1');
+    document.getElementById('t-card1-p2').textContent = t('card1p2');
+    document.getElementById('t-info-title').textContent = t('infoTitle');
+    document.getElementById('t-info-p1').textContent = t('infoP1');
+    document.getElementById('t-info-p2').textContent = t('infoP2');
+    document.getElementById('t-info-p3').textContent = t('infoP3');
+    document.getElementById('t-info-p4').textContent = t('infoP4');
+    document.getElementById('t-info-p5a').textContent = t('infoP5a');
+    document.getElementById('t-footer').textContent = t('footer');
+    
+    const btn = document.getElementById('btn-verify');
+    if (!btn.disabled || btn.textContent === I18N.it.btnVerifyAgain || btn.textContent === I18N.en.btnVerifyAgain) {
+      if (document.getElementById('boot-error').style.display === 'block') {
+         btn.textContent = t('btnNotAvail');
+      } else {
+         btn.textContent = document.getElementById('result').style.display === 'block' ? t('btnVerifyAgain') : t('btnVerify');
+      }
+    }
+
+    const detailsBtn = document.getElementById('details-toggle');
+    if (detailsBtn.style.display !== 'none') {
+       const list = document.getElementById('details-list');
+       detailsBtn.textContent = list.classList.contains('open') ? t('btnDetailsHide') : t('btnDetailsShow');
+    }
+  }
+
+  function initLanguage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const langParam = urlParams.get('lang');
+
+    if (langParam === 'it' || langParam === 'en') {
+      setLanguage(langParam);
+    } else {
+      const browserLang = navigator.language || navigator.userLanguage;
+      setLanguage(browserLang.toLowerCase().startsWith('it') ? 'it' : 'en');
+    }
+  }
+
+  function initEvents() {
+    document.getElementById('lang-it').addEventListener('click', function() { setLanguage('it'); });
+    document.getElementById('lang-en').addEventListener('click', function() { setLanguage('en'); });
+    document.getElementById('btn-verify').addEventListener('click', runVerification);
+    document.getElementById('details-toggle').addEventListener('click', toggleDetails);
+  }
+
   const FOLIO_DOMAIN = 'https://folio.anchordocservices.com';
   const MANIFEST_BASE = 'https://raw.githubusercontent.com/anchordocservices/folio-integrity/main/manifests/latest';
   const MANIFEST_URL = MANIFEST_BASE + '/manifest.txt';
   const SIGNATURE_URL = MANIFEST_BASE + '/manifest.txt.asc';
   const EXPECTED_FINGERPRINT = 'af721580f0b11f2b6236adde5cf9c685c375cd70';
 
-  // --- Chiave pubblica GPG del maintainer ---
-  // Fingerprint: AF721580F0B11F2B6236ADDE5CF9C685C375CD70
-  // Hardcoded. Qualsiasi modifica è visibile nel diff pubblico su GitHub.
-  // ISTRUZIONE: sostituire con l'output di:
-  //   gpg --armor --export AF721580F0B11F2B6236ADDE5CF9C685C375CD70
   const MAINTAINER_PUBLIC_KEY = `
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
@@ -405,17 +618,14 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
 -----END PGP PUBLIC KEY BLOCK-----
   `;
 
-  // --- Stato interno ---
-  let pgpPublicKey = null; // OpenPGP key object, validato al boot
+  let pgpPublicKey = null;
 
-  // --- Hash SHA-256 su dati binari (ArrayBuffer, nessuna conversione encoding) ---
   async function sha256Binary(arrayBuffer) {
     const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
   }
 
-  // --- UI helpers ---
   function setProgress(text, pct) {
     document.getElementById('progress-text').textContent = text;
     document.getElementById('progress-fill').style.width = pct + '%';
@@ -423,19 +633,18 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
 
   function displayNameFor(entry) {
     const ref = ((entry && entry.name) || '') + ' ' + ((entry && entry.url) || '');
-    if (ref.indexOf('crypto.js') !== -1) return 'Motore di cifratura';
-    if (ref.indexOf('folio-editor.js') !== -1) return 'Editor';
-    if (ref.indexOf('folio-tiptap.js') !== -1) return 'Editor rich text';
-    if (ref.indexOf('i18n.js') !== -1) return 'Motore lingua';
-    if (ref.indexOf('en.json') !== -1) return 'Risorse lingua EN';
-    if (ref.indexOf('it.json') !== -1) return 'Risorse lingua IT';
-    if (ref.indexOf('app.html') !== -1 || ref.indexOf('/app') !== -1) return 'Applicazione';
-    if (ref.indexOf('register_en.html') !== -1 || ref.indexOf('/en/register') !== -1) return 'Registrazione EN';
-    if (ref.indexOf('register.html') !== -1 || ref.indexOf('/register') !== -1) return 'Registrazione IT';
-    return 'Componente verificato';
+    if (ref.indexOf('crypto.js') !== -1) return t('cCrypto');
+    if (ref.indexOf('folio-editor.js') !== -1) return t('cEditor');
+    if (ref.indexOf('folio-tiptap.js') !== -1) return t('cRich');
+    if (ref.indexOf('i18n.js') !== -1) return t('cLang');
+    if (ref.indexOf('en.json') !== -1) return t('cResEn');
+    if (ref.indexOf('it.json') !== -1) return t('cResIt');
+    if (ref.indexOf('app.html') !== -1 || ref.indexOf('/app') !== -1) return t('cApp');
+    if (ref.indexOf('register_en.html') !== -1 || ref.indexOf('/en/register') !== -1) return t('cRegEn');
+    if (ref.indexOf('register.html') !== -1 || ref.indexOf('/register') !== -1) return t('cRegIt');
+    return t('cGen');
   }
 
-  // Costruzione DOM sicura — nessun innerHTML con dati dalla rete
   function showResult(type, icon, title, detail, files) {
     const result = document.getElementById('result');
     result.className = 'result ' + type;
@@ -451,12 +660,12 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
       tech.className = 'tech-block';
 
       const rows = [
-        ['Firma manifest', type === 'ok' ? 'verificata' : 'controllata'],
-        ['Fingerprint chiave', 'AF72 1580 F0B1 1F2B 6236 ADDE 5CF9 C685 C375 CD70'],
-        ['Componenti verificati', String(files.length)],
-        ['Algoritmo hash', 'SHA-256'],
-        ['Algoritmo firma', 'OpenPGP / GPG'],
-        ['Dominio verificato', 'folio.anchordocservices.com']
+        [t('tdSigLabel'), type === 'ok' ? t('tdSigVer') : t('tdSigChk')],
+        [t('tdFpLabel'), 'AF72 1580 F0B1 1F2B 6236 ADDE 5CF9 C685 C375 CD70'],
+        [t('tdCompLabel'), String(files.length)],
+        [t('tdHashLabel'), 'SHA-256'],
+        [t('tdAlgLabel'), 'OpenPGP / GPG'],
+        [t('tdDomLabel'), 'folio.anchordocservices.com']
       ];
 
       rows.forEach(function(pair) {
@@ -485,7 +694,7 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
 
         const nameSpan = document.createElement('span');
         nameSpan.className = 'file-name';
-        nameSpan.textContent = f.displayName || f.name || 'Componente verificato';
+        nameSpan.textContent = f.displayName || f.name || t('cGen');
 
         row.appendChild(iconSpan);
         row.appendChild(nameSpan);
@@ -503,17 +712,18 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
       audit.className = 'audit-details';
 
       const summary = document.createElement('summary');
-      summary.textContent = 'Mostra audit hashes';
+      summary.textContent = t('auditSummary');
       audit.appendChild(summary);
 
       for (let i = 0; i < files.length; i++) {
         const f = files[i];
-        if (!f.ok || !f.hash || f.hash.indexOf('atteso:') === 0 || f.hash.indexOf('errore:') === 0 || f.hash.indexOf('Bloccato') === 0) {
+        
+        if (!f.ok) {
           continue;
         }
 
         const auditName = document.createElement('div');
-        auditName.textContent = (f.displayName || f.name || 'Componente') + ' — SHA-256';
+        auditName.textContent = (f.displayName || f.name || 'Component') + ' — SHA-256';
         audit.appendChild(auditName);
 
         const auditHash = document.createElement('div');
@@ -524,6 +734,8 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
 
       list.appendChild(audit);
       document.getElementById('details-toggle').style.display = 'inline-block';
+      document.getElementById('details-toggle').textContent = t('btnDetailsShow');
+      list.classList.remove('open');
     } else {
       document.getElementById('details-toggle').style.display = 'none';
     }
@@ -536,14 +748,13 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
     const btn = document.getElementById('details-toggle');
     if (list.classList.contains('open')) {
       list.classList.remove('open');
-      btn.textContent = 'Mostra dettagli tecnici';
+      btn.textContent = t('btnDetailsShow');
     } else {
       list.classList.add('open');
-      btn.textContent = 'Nascondi dettagli tecnici';
+      btn.textContent = t('btnDetailsHide');
     }
   }
 
-  // --- Parsing manifest ---
   function parseManifest(text) {
     const lines = text.split('\n');
     const entries = [];
@@ -565,9 +776,6 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
     return { entries: entries, meta: meta };
   }
 
-  // --- Verifica firma GPG crittografica con OpenPGP.js ---
-  // Restituisce il testo verificato ESTRATTO dall'oggetto OpenPGP,
-  // non il testo scaricato — così non ci si fida della stringa originale.
   async function verifyGPGSignature(manifestText, signatureArmored) {
     const signature = await openpgp.readSignature({ armoredSignature: signatureArmored });
     const message = await openpgp.createMessage({ text: manifestText });
@@ -579,96 +787,74 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
     });
 
     const sig = verificationResult.signatures[0];
-    // await sig.verified lancia eccezione se la firma è invalida
     await sig.verified;
 
-    // Verifica che il keyID corrisponda alla chiave attesa
     const keyID = sig.keyID.toHex().toLowerCase();
-
-    // Estrai il testo verificato dall'oggetto OpenPGP — non fidarti della stringa originale
     const verifiedText = verificationResult.data;
 
     return { valid: true, keyID: keyID, verifiedText: verifiedText };
   }
 
-  // --- Verifica principale ---
   async function runVerification() {
     const btn = document.getElementById('btn-verify');
     btn.disabled = true;
-    btn.textContent = 'Verifica in corso...';
+    btn.textContent = t('btnLoading');
 
     const progress = document.getElementById('progress');
     progress.className = 'progress active';
 
-    // Reset
     document.getElementById('result').className = 'result';
     document.getElementById('details-list').className = 'details-list';
 
     try {
-      // 1. Scarica manifest
-      setProgress('Scaricamento manifest da GitHub...', 5);
+      setProgress(t('progManifest'), 5);
       const manifestResp = await fetch(MANIFEST_URL, { cache: 'no-store' });
       if (!manifestResp.ok) {
-        throw new Error('Manifest non trovato. Nessuna release pubblicata ancora.');
+        throw new Error(t('errManifest'));
       }
       const manifestText = await manifestResp.text();
 
-      // 2. Scarica firma GPG
-      setProgress('Scaricamento firma GPG...', 15);
+      setProgress(t('progSig'), 15);
       const sigResp = await fetch(SIGNATURE_URL, { cache: 'no-store' });
       if (!sigResp.ok) {
-        // Firma assente = FAIL, non warning
-        showResult('fail', '\u2717',
-          'Firma GPG assente',
-          'Il file di firma (manifest.txt.asc) non \u00e8 stato trovato. Senza firma crittografica il manifest non \u00e8 verificabile. Verifica interrotta.',
-          []
-        );
+        showResult('fail', '\u2717', t('errSigMissingTitle'), t('errSigMissingDesc'), []);
         btn.disabled = false;
-        btn.textContent = 'Verifica di nuovo';
+        btn.textContent = t('btnVerifyAgain');
         return;
       }
       const signatureArmored = await sigResp.text();
 
-      // 3. Verifica CRITTOGRAFICA della firma GPG
-      setProgress('Verifica crittografica della firma GPG...', 25);
+      setProgress(t('progVerGpg'), 25);
       let gpgResult;
       try {
         gpgResult = await verifyGPGSignature(manifestText, signatureArmored);
       } catch (gpgErr) {
-        // Firma invalida = FAIL immediato
-        showResult('fail', '\u2717',
-          'Firma GPG non valida',
-          'La firma crittografica del manifest non corrisponde alla chiave pubblica del maintainer. ' +
-          'Il manifest potrebbe essere stato alterato. Errore: ' + gpgErr.message,
-          []
-        );
+        showResult('fail', '\u2717', t('errSigInvalidTitle'), t('errSigInvalidDesc') + gpgErr.message, []);
         btn.disabled = false;
-        btn.textContent = 'Verifica di nuovo';
+        btn.textContent = t('btnVerifyAgain');
         return;
       }
 
-      // 4. Usa il testo VERIFICATO estratto da OpenPGP, non la stringa scaricata
-      setProgress('Firma verificata. Lettura manifest...', 35);
+      setProgress(t('progReadMan'), 35);
       const parsed = parseManifest(gpgResult.verifiedText);
       const entries = parsed.entries;
       const meta = parsed.meta;
 
       if (entries.length === 0) {
-        throw new Error('Manifest firmato vuoto o formato non valido.');
+        throw new Error(t('errEmptyMan'));
       }
 
-      // 5. Verifica ogni asset — download come ArrayBuffer (binario grezzo)
       const results = [];
       for (let i = 0; i < entries.length; i++) {
         const entry = entries[i];
         const pct = 35 + Math.round((i / entries.length) * 55);
-        setProgress('Verifica ' + displayNameFor(entry) + '...', pct);
+        setProgress(t('progVerComp') + displayNameFor(entry) + '...', pct);
 
         try {
           const assetUrl = FOLIO_DOMAIN + entry.url + (entry.url.indexOf('?') === -1 ? '?' : '&') + 'integrity_nocache=' + Date.now();
           const resp = await fetch(assetUrl, { cache: 'no-store' });
           if (!resp.ok) {
-            results.push({ name: entry.name, displayName: displayNameFor(entry), ok: false, hash: 'file non raggiungibile (HTTP ' + resp.status + ')' });
+            results.push({ name: entry.name, displayName: displayNameFor(entry), ok: false, hash: t('errUnreachable', resp.status) });
             continue;
           }
 
@@ -680,7 +866,7 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
             ok: hash === entry.hash,
             hash: hash === entry.hash
               ? hash
-              : 'atteso: ' + entry.hash.slice(0, 16) + '...  ricevuto: ' + hash.slice(0, 16) + '...'
+              : t('hashMismatch', entry.hash.slice(0, 16), hash.slice(0, 16))
           });
         } catch (e) {
           if (e instanceof TypeError &&
@@ -689,113 +875,66 @@ GghElHk+bnQhDY/4n5dSkySjdKWkoCDNM21xGqP3og==
               name: entry.name,
               displayName: displayNameFor(entry),
               ok: false,
-              hash: 'Bloccato dal browser (CORS). Il server deve inviare Access-Control-Allow-Origin per questo dominio.'
+              hash: t('errCorsHash')
             });
           } else {
-            results.push({ name: entry.name, displayName: displayNameFor(entry), ok: false, hash: 'errore: ' + e.message });
+            results.push({ name: entry.name, displayName: displayNameFor(entry), ok: false, hash: t('errGenericHash', e.message) });
           }
         }
       }
 
-      setProgress('Completamento...', 95);
+      setProgress(t('progDone'), 95);
 
-      // 6. Risultato finale
       const allOk = results.every(function(r) { return r.ok; });
       const failCount = results.filter(function(r) { return !r.ok; }).length;
-      const corsBlocked = results.filter(function(r) { return r.hash && r.hash.indexOf('CORS') !== -1; }).length;
-
-      const versionInfo = (meta.tag && meta.tag !== 'no-tag')
-        ? 'Release ' + meta.tag
-        : (meta.version && meta.version !== 'unknown')
-          ? 'Versione ' + meta.version
-          : '';
-
-      const dateInfo = meta.date
-        ? new Date(meta.date).toLocaleDateString('it-IT', {
-            day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
-          })
-        : '';
-
-      const gpgNote = 'Firma digitale verificata.';
+      const corsBlocked = results.filter(function(r) { return r.hash && (r.hash.indexOf('CORS') !== -1 || r.hash.indexOf('Access-Control') !== -1); }).length;
 
       if (allOk) {
-        showResult('ok', '\u2713',
-          'Integrità verificata',
-          'I componenti critici dell’applicazione corrispondono al manifest firmato. ' + gpgNote,
-          results
-        );
+        showResult('ok', '\u2713', t('resOkTitle'), t('resOkDesc'), results);
       } else if (corsBlocked > 0 && corsBlocked === failCount) {
-        showResult('warn', '\u26A0',
-          'Verifica bloccata dal browser',
-          corsBlocked + ' asset non verificabili per restrizioni CORS. ' +
-          'Il server di Folio deve aggiungere l\'header Access-Control-Allow-Origin per questo dominio. ' + gpgNote,
-          results
-        );
+        showResult('warn', '\u26A0', t('resWarnCorsTitle'), t('resWarnCorsDesc', corsBlocked), results);
       } else {
-        showResult('fail', '\u2717',
-          failCount + ' file non corrispondono',
-          'Attenzione: ' + failCount + ' asset su ' + results.length +
-          ' non corrispondono al manifest firmato. Il codice sul server potrebbe essere stato modificato. ' + gpgNote,
-          results
-        );
+        showResult('fail', '\u2717', t('resFailTitle', failCount), t('resFailDesc', failCount, results.length), results);
       }
 
     } catch (err) {
-      showResult('warn', '\u26A0',
-        'Verifica non completata',
-        err.message || 'Errore durante la verifica.',
-        []
-      );
+      showResult('warn', '\u26A0', t('resIncTitle'), err.message || t('resIncDesc'), []);
     }
 
     btn.disabled = false;
-    btn.textContent = 'Verifica di nuovo';
+    btn.textContent = t('btnVerifyAgain');
   }
 
-  // --- Boot: valida la chiave GPG prima di abilitare il bottone ---
   async function boot() {
     const btn = document.getElementById('btn-verify');
     const bootError = document.getElementById('boot-error');
 
+    initLanguage();
+    initEvents();
+
     try {
-      // Verifica che OpenPGP.js sia caricato
       if (typeof openpgp === 'undefined') {
-        throw new Error('La libreria di verifica crittografica (OpenPGP.js) non si \u00e8 caricata. Ricarica la pagina.');
+        throw new Error(t('bootErrLib'));
       }
 
-      // Parsing e validazione della chiave pubblica
       pgpPublicKey = await openpgp.readKey({ armoredKey: MAINTAINER_PUBLIC_KEY });
 
-      // Verifica che il fingerprint corrisponda a quello atteso
       const keyFingerprint = pgpPublicKey.getFingerprint().toLowerCase();
       if (keyFingerprint !== EXPECTED_FINGERPRINT) {
-        throw new Error(
-          'La chiave pubblica inclusa in questa pagina ha un fingerprint diverso da quello atteso. ' +
-          'Atteso: ' + EXPECTED_FINGERPRINT + ' — Trovato: ' + keyFingerprint + '. ' +
-          'La pagina potrebbe essere stata manomessa.'
-        );
+        throw new Error(t('bootErrFp', EXPECTED_FINGERPRINT, keyFingerprint));
       }
 
-      // Tutto ok: abilita il bottone
       btn.disabled = false;
-      btn.textContent = 'Verifica integrità';
+      btn.textContent = t('btnVerify');
 
     } catch (err) {
-      // Chiave non valida o placeholder non sostituito: blocca la pagina
       btn.disabled = true;
-      btn.textContent = 'Verifica non disponibile';
+      btn.textContent = t('btnNotAvail');
       bootError.style.display = 'block';
-      bootError.textContent =
-        'Errore di configurazione: la chiave pubblica GPG inclusa in questa pagina non \u00e8 valida. ' +
-        'La verifica non pu\u00f2 procedere. Dettaglio: ' + err.message;
+      bootError.textContent = t('bootErrConf') + err.message;
     }
   }
 
-  // Esponi solo le funzioni necessarie per gli onclick nell'HTML
-  window.runVerification = runVerification;
-  window.toggleDetails = toggleDetails;
-
-  // Avvia validazione chiave al caricamento
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
   } else {
