@@ -1,21 +1,19 @@
 # Folio Integrity Manifest
-# Generated: 2026-05-17T17:04:35Z
-# Git commit: 09acfedb04e9b29808de7908e54a75ec9ba8cc1d
-# Git tag: v1.46-pwd-fix-38-g09acfed
+# Generated: 2026-05-19T20:07:41Z
 # Domain: https://folio.anchordocservices.com
 # Source: live HTTP GET (not local files)
-# Format: SHA256  PUBLIC_PATH  SOURCE_LABEL
+# Format: SHA256  PUBLIC_PATH
 # ---
 
-36a14216f264964a47af6ab690f770b6e3a020f62b0a57a3812e077a92c0702e  /static/js/crypto.js  web/static/js/crypto.js
-4d6298cb787d0b13a5452e1fdcfb846311ea7d6218b422a8028c462f9f70d779  /static/js/folio-editor.js  web/static/js/folio-editor.js
-5e8ac771c23fe0bcbf161842295c23e64e0c05a20d4cc4230c67e1fc6b30d7b1  /static/js/folio-tiptap.js  web/static/js/folio-tiptap.js
-6c7672ce420c754361bab435aaf76a7193b248db948fd30614ae59bb07c4ebe0  /static/js/i18n.js  web/static/js/i18n.js
-2baeacaffdc3a7c0631d55900a20f59d1de12838238472573acb00130efc7df7  /static/i18n/en.json  web/static/i18n/en.json
-d1974e30b91fb11111314e9e7dd75bd4bb2eae1b0adc61f36eea64c587b73bc2  /static/i18n/it.json  web/static/i18n/it.json
-b616f11aee77a717d28041908b4c37eac87d50e69698c68a885a147b14e74646  /app  web/templates/app.html
-fc99738457260a54082dede768bc5dfeb30708050750b00b088146717ef83b67  /register  web/templates/register.html
-964e8b3142f864d77ba615e0a62bebfdcb32ffc9cd3caa9036484606f79f4d8f  /en/register  web/templates/register_en.html
+36a14216f264964a47af6ab690f770b6e3a020f62b0a57a3812e077a92c0702e  /static/js/crypto.js
+4d6298cb787d0b13a5452e1fdcfb846311ea7d6218b422a8028c462f9f70d779  /static/js/folio-editor.js
+5e8ac771c23fe0bcbf161842295c23e64e0c05a20d4cc4230c67e1fc6b30d7b1  /static/js/folio-tiptap.js
+6c7672ce420c754361bab435aaf76a7193b248db948fd30614ae59bb07c4ebe0  /static/js/i18n.js
+2baeacaffdc3a7c0631d55900a20f59d1de12838238472573acb00130efc7df7  /static/i18n/en.json
+d1974e30b91fb11111314e9e7dd75bd4bb2eae1b0adc61f36eea64c587b73bc2  /static/i18n/it.json
+b616f11aee77a717d28041908b4c37eac87d50e69698c68a885a147b14e74646  /app
+fc99738457260a54082dede768bc5dfeb30708050750b00b088146717ef83b67  /register
+964e8b3142f864d77ba615e0a62bebfdcb32ffc9cd3caa9036484606f79f4d8f  /en/register
 
 # ---
 # Checked live assets: 9/9
