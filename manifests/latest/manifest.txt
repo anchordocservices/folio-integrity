@@ -1,5 +1,5 @@
 # Folio Integrity Manifest
-# Generated: 2026-05-19T20:07:41Z
+# Generated: 2026-05-20T00:44:30Z
 # Domain: https://folio.anchordocservices.com
 # Source: live HTTP GET (not local files)
 # Format: SHA256  PUBLIC_PATH
